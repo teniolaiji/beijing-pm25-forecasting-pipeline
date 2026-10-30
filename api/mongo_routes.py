@@ -2,10 +2,11 @@
 
 from datetime import datetime
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, Query, status
 from pymongo.errors import DuplicateKeyError
 
 from api import mongo_db
+from api.config import MAX_RANGE_ROWS
 from api.schemas import Record, RecordUpdate
 
 router = APIRouter(prefix="/mongo", tags=["MongoDB"])
@@ -23,6 +24,26 @@ def create(record: Record):
         raise HTTPException(status.HTTP_409_CONFLICT,
                             f"A record for {record.datetime.isoformat()} already exists")
     return mongo_db.get_record(record.datetime)
+
+
+# Time-series queries. Declared before /records/{ts} so "latest" isn't read as a date.
+@router.get("/records/latest", response_model=Record)
+def latest():
+    rec = mongo_db.get_latest()
+    if rec is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "The collection is empty")
+    return rec
+
+
+@router.get("/records", response_model=list[Record])
+def date_range(
+    start: datetime = Query(..., description="e.g. 2014-12-30T00:00:00"),
+    end: datetime = Query(..., description="e.g. 2014-12-31T23:00:00"),
+    limit: int = Query(1000, ge=1, le=MAX_RANGE_ROWS),
+):
+    if start > end:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "start must be before end")
+    return mongo_db.get_range(start, end, limit)
 
 
 @router.get("/records/{ts}", response_model=Record)

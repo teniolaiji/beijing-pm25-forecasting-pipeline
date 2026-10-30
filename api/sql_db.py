@@ -66,6 +66,24 @@ def get_record(ts):
         return cur.fetchone()
 
 
+def get_latest():
+    with connection() as conn:
+        cur = _cursor(conn)
+        cur.execute(SELECT_RECORD + " ORDER BY w.reading_time DESC LIMIT 1")
+        return cur.fetchone()
+
+
+def get_range(start, end, limit):
+    """Records with start <= datetime <= end, oldest first."""
+    with connection() as conn:
+        cur = _cursor(conn)
+        cur.execute(
+            SELECT_RECORD + " WHERE w.reading_time BETWEEN %s AND %s ORDER BY w.reading_time LIMIT %s",
+            (start, end, limit),
+        )
+        return cur.fetchall()
+
+
 def create_record(rec: dict):
     """Insert the weather row, then the PM2.5 row linked to it, in one transaction."""
     with connection() as conn:

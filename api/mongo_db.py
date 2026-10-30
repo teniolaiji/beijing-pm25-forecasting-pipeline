@@ -45,6 +45,22 @@ def get_record(ts):
     return to_record(doc) if doc else None
 
 
+def get_latest():
+    doc = collection().find_one({}, {"_id": 0}, sort=[("datetime", -1)])
+    return to_record(doc) if doc else None
+
+
+def get_range(start, end, limit):
+    """Records with start <= datetime <= end, oldest first (uses the datetime index)."""
+    cursor = (
+        collection()
+        .find({"datetime": {"$gte": start, "$lte": end}}, {"_id": 0})
+        .sort("datetime", 1)
+        .limit(limit)
+    )
+    return [to_record(d) for d in cursor]
+
+
 def create_record(rec: dict):
     collection().insert_one(to_document(rec))
 
