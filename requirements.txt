@@ -7,3 +7,5 @@ statsmodels
 jupyter
 xgboost
 joblib
+mysql-connector-python
+python-dotenv
