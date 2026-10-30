@@ -8,7 +8,7 @@ Interactive docs: http://127.0.0.1:8000/docs
 
 from fastapi import FastAPI
 
-from api import sql_routes
+from api import mongo_routes, sql_routes
 
 app = FastAPI(
     title="Beijing PM2.5 API",
@@ -17,6 +17,7 @@ app = FastAPI(
 )
 
 app.include_router(sql_routes.router)
+app.include_router(mongo_routes.router)
 
 
 @app.get("/", tags=["health"])
