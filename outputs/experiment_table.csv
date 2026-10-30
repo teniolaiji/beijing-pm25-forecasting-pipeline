@@ -1,0 +1,6 @@
+experiment,model,predicts,hyperparameters,val_RMSE,val_MAE,val_R2,train_seconds,vs_baseline
+E4,XGBoost (tuned),change,"max_depth=3, learning_rate=0.1, min_child_weight=20, subsample=0.8, colsample_bytree=0.8, n_estimators=139",23.4,12.665,0.943,0.2,+5.8%
+E1,Linear Regression,change,default,23.665,12.984,0.942,0.0,+4.7%
+E3,XGBoost,change,"n_estimators=300, max_depth=6, learning_rate=0.1",24.542,13.164,0.938,0.9,+1.2%
+E0,Persistence baseline,-,-,24.83,13.179,0.936,0.0,+0.0%
+E2,XGBoost,level,"n_estimators=300, max_depth=6, learning_rate=0.1",28.327,13.852,0.917,0.9,-14.1%

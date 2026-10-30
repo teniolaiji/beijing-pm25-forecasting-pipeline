@@ -1,0 +1,49 @@
+{
+  "model": "XGBRegressor",
+  "experiment": "E4",
+  "hyperparameters": {
+    "max_depth": 3,
+    "learning_rate": 0.1,
+    "min_child_weight": 20,
+    "subsample": 0.8,
+    "colsample_bytree": 0.8,
+    "n_estimators": 139
+  },
+  "target": "change in PM2.5 from the previous hour",
+  "forecast": "pm25_lag1 + model output",
+  "features": [
+    "pm25_lag1",
+    "pm25_lag2",
+    "pm25_lag3",
+    "pm25_lag24",
+    "pm25_roll6",
+    "pm25_roll24",
+    "dew_point_lag1",
+    "temperature_lag1",
+    "pressure_lag1",
+    "wind_speed_lag1",
+    "hours_snow_lag1",
+    "hours_rain_lag1",
+    "wind_NE",
+    "wind_NW",
+    "wind_SE",
+    "wind_cv",
+    "hour",
+    "month",
+    "dayofweek"
+  ],
+  "history_hours_needed": 24,
+  "preprocessing": "preprocessing.clean(): interpolate PM2.5 gaps <= 6 h",
+  "trained_on": "2010-01-03 to 2013-12-31",
+  "test_period": "2014",
+  "test_metrics": {
+    "RMSE": 20.677,
+    "MAE": 11.412,
+    "R2": 0.951
+  },
+  "test_persistence_metrics": {
+    "RMSE": 21.976,
+    "MAE": 11.897,
+    "R2": 0.944
+  }
+}
