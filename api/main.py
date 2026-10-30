@@ -1,0 +1,25 @@
+"""
+Beijing PM2.5 API: CRUD and time-series queries over MySQL and MongoDB.
+
+Run from the repo root:
+    uvicorn api.main:app --reload
+Interactive docs: http://127.0.0.1:8000/docs
+"""
+
+from fastapi import FastAPI
+
+from api import mongo_routes, sql_routes
+
+app = FastAPI(
+    title="Beijing PM2.5 API",
+    description="Hourly PM2.5 and weather records, served from MySQL (/sql) and MongoDB (/mongo).",
+    version="1.0.0",
+)
+
+app.include_router(sql_routes.router)
+app.include_router(mongo_routes.router)
+
+
+@app.get("/", tags=["health"])
+def root():
+    return {"status": "ok", "docs": "/docs", "databases": ["/sql", "/mongo"]}
